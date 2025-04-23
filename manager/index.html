@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script src="graph.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">Manager Module</div>
+            <ul>
+                <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#team-insights"><i class="fas fa-chart-bar"></i> Team Insights</a></li>
+                <li><a href="#feedback-actions"><i class="fas fa-comments"></i> Feedback & Actions</a></li>
+                <li><a href="#notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="#chat"><i class="fas fa-comment"></i> Chat</a></li>
+                <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="theme-toggle">
+                <button id="theme-switcher"><i class="fas fa-moon"></i> Dark Mode</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Dashboard Panel -->
+            <!-- Updated Dashboard Section -->
+            <section id="dashboard" class="panel active">
+                <h1><i class="fas fa-home"></i> Overview Hub</h1>
+                <div class="grid-container">
+                    <!-- Productivity Summary -->
+                    <div class="card wide">
+                        <h2><i class="fas fa-chart-line"></i> Productivity Summary</h2>
+                        <div class="charts-container">
+                            <div class="chart-wrapper">
+                                <canvas id="completionRateChart"></canvas>
+                            </div>
+                            <div class="metrics-grid">
+                                <div class="metric-box">
+                                    <div class="metric-value">78%</div>
+                                    <div class="metric-label">Weekly Completion Rate</div>
+                                    <div class="metric-trend up">+5.2%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-value">34h</div>
+                                    <div class="metric-label">Avg Active Hours</div>
+                                    <div class="metric-trend down">-1.8h</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Health Snapshot -->
+                    <div class="card">
+                        <h2><i class="fas fa-heartbeat"></i> Team Health</h2>
+                        <div class="team-health-grid">
+                            <div class="member-load">
+                                <div class="member-name">Sarah C.</div>
+                                <div class="load-bar">
+                                    <div class="load-fill" style="width: 85%"></div>
+                                </div>
+                                <div class="load-percent">85%</div>
+                                <i class="fas fa-exclamation-triangle warning"></i>
+                            </div>
+                            <!-- Repeat for other team members -->
+                        </div>
+                        <div class="health-key">
+                            <span>
+                                <div class="key-safe"></div> Safe
+                            </span>
+                            <span>
+                                <div class="key-warn"></div> Warning
+                            </span>
+                            <span>
+                                <div class="key-over"></div> Overloaded
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Response Time Metrics -->
+                    <div class="card">
+                        <h2><i class="fas fa-stopwatch"></i> Response Times</h2>
+                        <div class="response-metrics">
+                            <div class="time-metric">
+                                <div class="time-value">2.4h</div>
+                                <div class="time-label">Avg Start Time</div>
+                            </div>
+                            <div class="time-metric">
+                                <div class="time-value">5.1h</div>
+                                <div class="time-label">Avg Response Time</div>
+                            </div>
+                            <div class="time-metric">
+                                <div class="time-value">18.7h</div>
+                                <div class="time-label">Avg Completion Time</div>
+                            </div>
+                        </div>
+                        <div class="time-comparison">
+                            <i class="fas fa-arrow-up text-danger"></i>
+                            12% slower than last week
+                        </div>
+                    </div>
+
+                    <!-- Feedback Review Panel -->
+                    <div class="card">
+                        <h2><i class="fas fa-comments"></i> Recent Feedback</h2>
+                        <div class="feedback-feed">
+                            <div class="feedback-item">
+                                <div class="feedback-header">
+                                    <span class="user">Mike Chen</span>
+                                    <span class="date">Today</span>
+                                </div>
+                                <p class="excerpt">Need better documentation for deployment process...</p>
+                                <div class="feedback-tag process">Process</div>
+                            </div>
+                            <!-- More feedback items -->
+                        </div>
+                        <button class="view-all-btn">View All Feedback</button>
+                    </div>
+
+                    <!-- Recommendations Panel -->
+                    <div class="card highlight">
+                        <h2><i class="fas fa-robot"></i> AI Recommendations</h2>
+                        <div class="recommendation-list">
+                            <div class="recommendation-item">
+                                <div class="rec-priority high">High</div>
+                                <div class="rec-content">
+                                    <h3>Reallocate Frontend Tasks</h3>
+                                    <p>Team A is at 120% capacity - suggest moving 3 tasks to Team C</p>
+                                </div>
+                            </div>
+                            <!-- More recommendations -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Insights Panel -->
+            <section id="team-insights" class="panel">
+                <h1><i class="fas fa-chart-bar"></i> Team Analytics</h1>
+
+                <!-- Comparison Filters -->
+                <div class="insights-controls">
+                    <div class="filter-group">
+                        <label><i class="fas fa-calendar-alt"></i> Timeframe:</label>
+                        <div class="btn-group">
+                            <button class="filter-btn active" data-timeframe="weekly">Weekly</button>
+                            <button class="filter-btn" data-timeframe="monthly">Monthly</button>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label><i class="fas fa-users"></i> Compare Teams:</label>
+                        <select class="team-selector" multiple>
+                            <option value="frontend">Frontend</option>
+                            <option value="backend">Backend</option>
+                            <option value="design">Design</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Performance Charts -->
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar"></i> Team Performance</h3>
+                        <canvas id="teamPerformanceChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-user-chart"></i> Member Comparison</h3>
+                        <canvas id="memberPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Task Volume Analytics -->
+                <div class="metrics-row">
+                    <div class="metric-box">
+                        <div class="metric-value">142</div>
+                        <div class="metric-label">Tasks Assigned</div>
+                        <div class="metric-trend up">+12%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">98</div>
+                        <div class="metric-label">Tasks Completed</div>
+                        <div class="metric-trend up">+8%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">22</div>
+                        <div class="metric-label">Overdue Tasks</div>
+                        <div class="metric-trend down">-3%</div>
+                    </div>
+                </div>
+
+                <!-- Deep Dive Section -->
+                <div class="deep-dive-section">
+                    <h3><i class="fas fa-search"></i> Task History Explorer</h3>
+                    <div class="deep-dive-controls">
+                        <button class="toggle-view-btn" data-view="team">
+                            <i class="fas fa-users"></i> Team View
+                        </button>
+                        <div class="breadcrumbs" id="currentSelection"></div>
+                    </div>
+                    <div class="task-history">
+                        <div class="task-list-header">
+                            <span>Member</span>
+                            <span>Tasks Completed</span>
+                            <span>Avg Time</span>
+                            <span>Overdue</span>
+                        </div>
+                        <div class="task-list-scroll">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Controls -->
+                <div class="export-controls">
+                    <button class="export-btn">
+                        <i class="fas fa-file-export"></i> Export Report (PDF/CSV)
+                    </button>
+                </div>
+            </section>
+
+            <!-- Feedback & Actions Panel -->
+            <section id="feedback-actions" class="panel">
+                <div class="feedback-actions-container">
+                    <!-- Feedback Viewer -->
+                    <div class="feedback-column">
+                        <h2><i class="fas fa-comments"></i> Employee Feedback</h2>
+                        <div class="feedback-filters">
+                            <div class="filter-tags">
+                                <button class="tag-btn active" data-tag="all">All</button>
+                                <button class="tag-btn" data-tag="process">Process</button>
+                                <button class="tag-btn" data-tag="team">Team</button>
+                                <button class="tag-btn" data-tag="management">Management</button>
+                            </div>
+                            <div class="sort-controls">
+                                <select id="sort-feedback">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="feedback-list">
+                            <!-- Feedback items will be dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Suggested Actions Column -->
+                    <div class="actions-column">
+                        <div class="actions-header">
+                            <h2><i class="fas fa-robot"></i> AI Recommendations</h2>
+                            <button class="refresh-recs"><i class="fas fa-sync"></i></button>
+                        </div>
+                        <div class="suggestions-list">
+                            <!-- Sample Recommendation -->
+                            <div class="suggestion-item">
+                                <div class="rec-meta">
+                                    <span class="rec-priority high">High Priority</span>
+                                    <span class="rec-date">Generated 2h ago</span>
+                                </div>
+                                <div class="rec-content">
+                                    <p>Team Frontend is at 120% capacity - recommend task redistribution</p>
+                                    <div class="rec-actions">
+                                        <button class="assign-btn">
+                                            <i class="fas fa-user-tag"></i> Assign to Lead
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications Panel -->
+            <section id="notifications" class="panel">
+                <div class="notifications-header">
+                    <h1><i class="fas fa-bell"></i> Notifications</h1>
+                    <div class="notification-controls">
+                        <button class="mark-read">Mark All as Read</button>
+                        <span class="unread-badge">3</span>
+                    </div>
+                </div>
+
+                <div class="notification-filters">
+                    <button class="filter-btn active" data-type="all">All</button>
+                    <button class="filter-btn" data-type="alert">Alerts</button>
+                    <button class="filter-btn" data-type="feedback">Feedback</button>
+                    <button class="filter-btn" data-type="insight">Insights</button>
+                    <button class="filter-btn" data-type="export">Exports</button>
+                </div>
+
+                <div class="notification-list">
+                    <!-- System Alert Example -->
+                    <div class="notification-item alert unread">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="notification-content">
+                            <h3>System Alert: Backend Team Performance Drop</h3>
+                            <p>Task completion rate fell below 65% threshold</p>
+                            <div class="notification-meta">
+                                <span class="timestamp">2 min ago</span>
+                                <span class="priority high">High Priority</span>
+                            </div>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+
+                    <!-- Feedback Update Example -->
+                    <div class="notification-item feedback unread">
+                        <i class="fas fa-comment-dots"></i>
+                        <div class="notification-content">
+                            <h3>New Feedback Received</h3>
+                            <p>From Sarah Johnson: "Need updated design guidelines"</p>
+                            <div class="notification-meta">
+                                <span class="timestamp">1 hour ago</span>
+                                <span class="category process">Process</span>
+                            </div>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat Panel -->
+            <section id="chat" class="panel">
+                <div class="chat-container">
+                    <!-- Team Leads Sidebar -->
+                    <div class="leads-sidebar">
+                        <h3><i class="fas fa-users-cog"></i> Team Leads</h3>
+                        <ul class="leads-list">
+                            <li class="lead-item active">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Sarah Connor (Frontend)</span>
+                            </li>
+                            <li class="lead-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Mike Johnson (Backend)</span>
+                            </li>
+                        </ul>
+                        <div class="broadcast-controls">
+                            <button class="broadcast-btn">
+                                <i class="fas fa-bullhorn"></i> New Broadcast
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Chat Area -->
+                    <div class="main-chat">
+                        <div class="chat-header">
+                            <h2><i class="fas fa-comments"></i> Leadership Communications</h2>
+                            <div class="chat-info">
+                                <span class="security-badge">
+                                    <i class="fas fa-lock"></i> End-to-End Encrypted
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Chat Messages -->
+                        <div class="chat-messages">
+                            <!-- System Message Example -->
+                            <div class="message system">
+                                <div class="message-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Only Team Leads can participate in this chat</span>
+                                </div>
+                            </div>
+
+                            <!-- File Message Example -->
+                            <div class="message">
+                                <div class="message-header">
+                                    <span class="sender">You</span>
+                                    <span class="timestamp">10:30 AM</span>
+                                    <span class="badge"><i class="fas fa-file"></i> PDF</span>
+                                </div>
+                                <div class="message-content">
+                                    <div class="file-attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <div class="file-info">
+                                            <span>Q3-Performance-Report.pdf</span>
+                                            <button class="download-btn">Download</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="chat-input">
+                            <div class="file-upload">
+                                <input type="file" id="file-upload" hidden>
+                                <label for="file-upload" class="file-btn">
+                                    <i class="fas fa-paperclip"></i>
+                                </label>
+                            </div>
+                            <input type="text" placeholder="Message team leads..." id="message-input">
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Shared Docs Panel -->
+                    <div class="docs-sidebar">
+                        <h3><i class="fas fa-folder-open"></i> Shared Documents</h3>
+                        <div class="docs-list">
+                            <div class="doc-item">
+                                <i class="fas fa-file-excel"></i>
+                                <div class="doc-info">
+                                    <span>Capacity-Planning.xlsx</span>
+                                    <span class="doc-meta">Uploaded 2h ago by Sarah</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Panel -->
+            <section id="settings" class="panel">
+                <div class="settings-grid">
+                    <!-- Profile Section -->
+                    <div class="settings-card">
+                        <h2><i class="fas fa-user-tie"></i> Profile Settings</h2>
+                        <form class="profile-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profile-name" value="John Doe" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="profile-email" value="john@company.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Position</label>
+                                    <input type="text" id="profile-position" value="Senior Manager">
+                                </div>
+                                <div class="form-group">
+                                    <label>Timezone</label>
+                                    <select id="timezone">
+                                        <option>UTC-05:00 Eastern Time</option>
+                                        <option>UTC-08:00 Pacific Time</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="save-btn">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Theme Preferences -->
+                    <div class="settings-card">
+                        <h2><i class="fas fa-palette"></i> Appearance</h2>
+                        <div class="theme-controls">
+                            <div class="control-group">
+                                <label>Theme Mode</label>
+                                <div class="toggle-group">
+                                    <button class="theme-mode-btn active" data-mode="light">
+                                        <i class="fas fa-sun"></i> Light
+                                    </button>
+                                    <button class="theme-mode-btn" data-mode="dark">
+                                        <i class="fas fa-moon"></i> Dark
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Layout Density</label>
+                                <select id="layout-density">
+                                    <option value="compact">Compact</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="spacious">Spacious</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Accent Color</label>
+                                <div class="color-picker">
+                                    <input type="color" id="accent-color" value="#3498db">
+                                    <label for="accent-color">Customize interface colors</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Controls -->
+                    <div class="settings-card">
+                        <h2><i class="fas fa-database"></i> Data Management</h2>
+                        <div class="data-controls">
+                            <div class="control-group">
+                                <button class="data-btn export-data">
+                                    <i class="fas fa-file-export"></i> Export All Data
+                                </button>
+                                <p class="help-text">Download CSV/JSON of all metrics</p>
+                            </div>
+
+                            <div class="control-group danger-zone">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h3>
+                                <button class="data-btn reset-stats">
+                                    <i class="fas fa-eraser"></i> Reset Statistics
+                                </button>
+                                <p class="help-text">Permanently clear all historical data</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        // Initialize Team Performance Chart
+        const teamCtx = document.getElementById('teamPerformanceChart').getContext('2d');
+        const teamChart = new Chart(teamCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Frontend', 'Backend', 'Design'],
+                datasets: [{
+                    label: 'Completed Tasks',
+                    data: [45, 38, 28],
+                    backgroundColor: '#27ae60'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // Initialize Member Performance Chart
+        const memberCtx = document.getElementById('memberPerformanceChart').getContext('2d');
+        const memberChart = new Chart(memberCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Top Performer',
+                    data: [12, 15, 18, 20],
+                    borderColor: '#2ecc71'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // Filter Functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                updateCharts(btn.dataset.timeframe);
+            });
+        });
+
+        function updateCharts(timeframe) {
+            // Simulate data update based on timeframe
+            const newData = timeframe === 'weekly'
+                ? [45, 38, 28]
+                : [180, 155, 120];
+
+            teamChart.data.datasets[0].data = newData;
+            teamChart.update();
+        }
+
+        // Deep Dive Functionality
+        let currentView = 'team';
+        let currentSelection = null;
+
+        document.querySelector('.toggle-view-btn').addEventListener('click', () => {
+            currentView = currentView === 'team' ? 'member' : 'team';
+            document.querySelector('.toggle-view-btn').dataset.view = currentView;
+            updateTaskHistoryView();
+        });
+
+        function updateTaskHistoryView() {
+            const taskList = document.querySelector('.task-list-scroll');
+            taskList.innerHTML = '';
+
+            if (currentView === 'team') {
+                // Show team-level data
+                teams.forEach(team => {
+                    const item = document.createElement('div');
+                    item.className = 'task-item';
+                    item.innerHTML = `
+                <span>${team.name}</span>
+                <span>${team.completed}</span>
+                <span>${team.avgTime}h</span>
+                <span>${team.overdue}</span>
+            `;
+                    item.addEventListener('click', () => drillDown(team));
+                    taskList.appendChild(item);
+                });
+            } else {
+                // Show member-level data
+                members.forEach(member => {
+                    const item = document.createElement('div');
+                    item.className = 'task-item';
+                    item.innerHTML = `
+                <span>${member.name}</span>
+                <span>${member.completed}</span>
+                <span>${member.avgTime}h</span>
+                <span>${member.overdue}</span>
+            `;
+                    taskList.appendChild(item);
+                });
+            }
+        }
+
+        // Demo Data
+        const teams = [
+            { name: 'Frontend', completed: 45, avgTime: 5.2, overdue: 3 },
+            { name: 'Backend', completed: 38, avgTime: 6.1, overdue: 5 },
+            { name: 'Design', completed: 28, avgTime: 4.8, overdue: 2 }
+        ];
+
+        const members = [
+            { name: 'Sarah C.', completed: 22, avgTime: 4.5, overdue: 1 },
+            { name: 'Mike T.', completed: 18, avgTime: 5.1, overdue: 2 }
+        ];
+
+        // Initial population
+        updateTaskHistoryView();
+
+        // Export Handler
+        document.querySelector('.export-btn').addEventListener('click', () => {
+            alert('Export initiated - this would generate PDF/CSV report');
+        });
+
+
+        // Feedback Data & Functions
+        const feedbackData = [
+            {
+                id: 1,
+                user: "Sarah Johnson",
+                date: "2023-07-25",
+                category: "process",
+                text: "The deployment process needs better documentation for new team members",
+                acknowledged: false
+            },
+            {
+                id: 2,
+                user: "Michael Chen",
+                date: "2023-07-24",
+                category: "team",
+                text: "We need more cross-training between frontend and backend teams",
+                acknowledged: true
+            }
+        ];
+
+        function renderFeedback() {
+            const container = document.querySelector('.feedback-list');
+            container.innerHTML = '';
+
+            feedbackData.forEach(fb => {
+                const item = document.createElement('div');
+                item.className = `feedback-item ${fb.acknowledged ? 'acknowledged' : ''}`;
+                item.innerHTML = `
+            <div class="feedback-header">
+                <span class="feedback-user">${fb.user}</span>
+                <span class="feedback-date">${fb.date}</span>
+                <span class="feedback-category category-${fb.category}">
+                    ${fb.category.charAt(0).toUpperCase() + fb.category.slice(1)}
+                </span>
+            </div>
+            <p class="feedback-text">${fb.text}</p>
+            <div class="feedback-actions">
+                <button class="acknowledge-btn" data-id="${fb.id}">
+                    ${fb.acknowledged ? '<i class="fas fa-check-circle"></i> Acknowledged' : 'Mark as Acknowledged'}
+                </button>
+            </div>
+        `;
+                container.appendChild(item);
+            });
+        }
+
+        // Handle Acknowledgment
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.acknowledge-btn')) {
+                const btn = e.target.closest('.acknowledge-btn');
+                const id = btn.dataset.id;
+                const feedback = feedbackData.find(f => f.id == id);
+                feedback.acknowledged = true;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Acknowledged';
+                btn.disabled = true;
+                btn.closest('.feedback-item').classList.add('acknowledged');
+            }
+        });
+
+        // Recommendation System
+        const recommendations = [
+            {
+                id: 1,
+                priority: 'high',
+                text: "Response times have increased by 25% - recommend additional training sessions",
+                assigned: false
+            }
+        ];
+
+        function renderRecommendations() {
+            const container = document.querySelector('.suggestions-list');
+            container.innerHTML = '';
+
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+            <div class="rec-meta">
+                <span class="rec-priority ${rec.priority}">
+                    ${rec.priority.charAt(0).toUpperCase() + rec.priority.slice(1)} Priority
+                </span>
+                <span class="rec-date">Generated ${new Date().toLocaleTimeString()}</span>
+            </div>
+            <div class="rec-content">
+                <p>${rec.text}</p>
+                <div class="rec-actions">
+                    <button class="assign-btn" data-id="${rec.id}">
+                        <i class="fas fa-user-tag"></i> ${rec.assigned ? 'Assigned' : 'Assign to Lead'}
+                    </button>
+                </div>
+            </div>
+        `;
+                container.appendChild(item);
+            });
+        }
+
+        // Handle Recommendation Assignment
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.assign-btn')) {
+                const btn = e.target.closest('.assign-btn');
+                const id = btn.dataset.id;
+                const recommendation = recommendations.find(r => r.id == id);
+
+                if (!recommendation.assigned) {
+                    recommendation.assigned = true;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Assigned';
+                    btn.disabled = true;
+
+                    // Show notification
+                    createNotification('assignment',
+                        `Recommendation sent to Team Leads: "${recommendation.text}"`);
+                }
+            }
+        });
+
+        // Initial Render
+        renderFeedback();
+        renderRecommendations();
+
+        // Notification System
+        const notificationList = document.querySelector('.notification-list');
+        let notifications = [];
+
+        // Notification Types
+        const NotificationType = {
+            ALERT: 'alert',
+            FEEDBACK: 'feedback',
+            INSIGHT: 'insight',
+            EXPORT: 'export'
+        };
+
+        function createNotification(type, content) {
+            const id = Date.now();
+            const newNotification = {
+                id,
+                type,
+                content,
+                timestamp: new Date(),
+                unread: true
+            };
+
+            notifications.unshift(newNotification);
+            renderNotifications();
+            updateUnreadBadge();
+            saveToLocalStorage();
+        }
+
+        // Render Notifications
+        function renderNotifications(filterType = 'all') {
+            notificationList.innerHTML = '';
+
+            const filtered = filterType === 'all'
+                ? notifications
+                : notifications.filter(n => n.type === filterType);
+
+            filtered.forEach(notification => {
+                const item = document.createElement('div');
+                item.className = `notification-item ${notification.type} ${notification.unread ? 'unread' : ''}`;
+                item.innerHTML = `
+            <i class="${getNotificationIcon(notification.type)}"></i>
+            <div class="notification-content">
+                ${formatNotificationContent(notification)}
+            </div>
+            <button class="close-btn"><i class="fas fa-times"></i></button>
+        `;
+
+                item.querySelector('.close-btn').addEventListener('click', () => removeNotification(notification.id));
+                item.addEventListener('click', () => markAsRead(notification.id));
+                notificationList.appendChild(item);
+            });
+        }
+
+        // Helper Functions
+        function getNotificationIcon(type) {
+            const icons = {
+                [NotificationType.ALERT]: 'fas fa-exclamation-triangle',
+                [NotificationType.FEEDBACK]: 'fas fa-comment-dots',
+                [NotificationType.INSIGHT]: 'fas fa-sync',
+                [NotificationType.EXPORT]: 'fas fa-file-export'
+            };
+            return icons[type] || 'fas fa-bell';
+        }
+
+        function formatNotificationContent(notification) {
+            const timeAgo = Math.floor((new Date() - notification.timestamp) / 60000);
+            const baseContent = `
+        <h3>${notification.content.title}</h3>
+        <p>${notification.content.message}</p>
+        <div class="notification-meta">
+            <span class="timestamp">${timeAgo} min ago</span>
+    `;
+
+            if (notification.type === NotificationType.ALERT) {
+                return baseContent + `<span class="priority high">High Priority</span></div>`;
+            }
+            return baseContent + `</div>`;
+        }
+
+        // Notification Actions
+        function markAsRead(id) {
+            notifications = notifications.map(n =>
+                n.id === id ? { ...n, unread: false } : n
+            );
+            renderNotifications();
+            updateUnreadBadge();
+            saveToLocalStorage();
+        }
+
+        function removeNotification(id) {
+            notifications = notifications.filter(n => n.id !== id);
+            renderNotifications();
+            updateUnreadBadge();
+            saveToLocalStorage();
+        }
+
+        // LocalStorage Integration
+        function saveToLocalStorage() {
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('notifications');
+            if (saved) notifications = JSON.parse(saved);
+        }
+
+        // Unread Badge
+        function updateUnreadBadge() {
+            const unreadCount = notifications.filter(n => n.unread).length;
+            document.querySelector('.unread-badge').textContent = unreadCount;
+        }
+
+        // Event Listeners
+        document.querySelector('.mark-read').addEventListener('click', () => {
+            notifications = notifications.map(n => ({ ...n, unread: false }));
+            renderNotifications();
+            updateUnreadBadge();
+        });
+
+        document.querySelectorAll('.notification-filters .filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderNotifications(btn.dataset.type);
+            });
+        });
+
+        // Initialize
+        loadFromLocalStorage();
+        renderNotifications();
+        updateUnreadBadge();
+
+        // Simulated Notifications (Demo)
+        createNotification(NotificationType.ALERT, {
+            title: 'System Alert: Overdue Tasks',
+            message: '5 tasks in Design team are past deadline'
+        });
+
+        createNotification(NotificationType.EXPORT, {
+            title: 'Report Exported',
+            message: 'Team performance report downloaded as PDF'
+        });
+
+
+        // Chat Functionality
+        const messageInput = document.getElementById('message-input');
+        const fileUpload = document.getElementById('file-upload');
+        const chatMessages = document.querySelector('.chat-messages');
+        let currentRecipient = null;
+
+        // Handle File Uploads
+        fileUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                sendFileMessage(file);
+            }
+        });
+
+        function sendFileMessage(file) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `
+        <div class="message-header">
+            <span class="sender">You</span>
+            <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+            <span class="badge"><i class="fas fa-file"></i> ${file.type.split('/')[1].toUpperCase()}</span>
+        </div>
+        <div class="message-content">
+            <div class="file-attachment">
+                <i class="fas ${getFileIcon(file.type)}"></i>
+                <div class="file-info">
+                    <span>${file.name}</span>
+                    <button class="download-btn">Download</button>
+                </div>
+            </div>
+        </div>
+    `;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Handle Broadcasts
+        document.querySelector('.broadcast-btn').addEventListener('click', () => {
+            const modal = document.createElement('div');
+            modal.className = 'broadcast-modal';
+            modal.innerHTML = `
+        <h3><i class="fas fa-bullhorn"></i> Team Broadcast</h3>
+        <textarea class="broadcast-textarea" 
+                  placeholder="Enter message for entire team..."></textarea>
+        <div class="modal-actions">
+            <button class="cancel-btn">Cancel</button>
+            <button class="send-broadcast-btn">Send to All</button>
+        </div>
+    `;
+
+            document.body.appendChild(modal);
+
+            modal.querySelector('.cancel-btn').addEventListener('click', () => {
+                modal.remove();
+            });
+
+            modal.querySelector('.send-broadcast-btn').addEventListener('click', () => {
+                const message = modal.querySelector('textarea').value;
+                if (message) {
+                    sendBroadcast(message);
+                    modal.remove();
+                }
+            });
+        });
+
+        function sendBroadcast(message) {
+            const broadcastElement = document.createElement('div');
+            broadcastElement.className = 'message broadcast';
+            broadcastElement.innerHTML = `
+        <div class="message-header">
+            <i class="fas fa-bullhorn"></i>
+            <span class="sender">Broadcast to All Teams</span>
+            <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+        </div>
+        <div class="message-content">
+            ${message}
+        </div>
+    `;
+            chatMessages.appendChild(broadcastElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Utility Functions
+        function getFileIcon(fileType) {
+            const icons = {
+                'pdf': 'fa-file-pdf',
+                'sheet': 'fa-file-excel',
+                'word': 'fa-file-word',
+                'image': 'fa-file-image'
+            };
+            return icons[fileType.split('/')[0]] || 'fa-file';
+        }
+
+        // Initialize Chat
+        document.querySelectorAll('.lead-item').forEach(lead => {
+            lead.addEventListener('click', () => {
+                document.querySelectorAll('.lead-item').forEach(l => l.classList.remove('active'));
+                lead.classList.add('active');
+                currentRecipient = lead.querySelector('span').textContent;
+            });
+        });
+
+        // Message Sending
+        document.querySelector('.send-btn').addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `
+        <div class="message-header">
+            <span class="sender">You</span>
+            <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+            ${currentRecipient ? `<span class="badge">To: ${currentRecipient}</span>` : ''}
+        </div>
+        <div class="message-content">${message}</div>
+    `;
+
+            chatMessages.appendChild(messageElement);
+            messageInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Profile Form Handling
+        document.querySelector('.profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('profile-name').value,
+                email: document.getElementById('profile-email').value,
+                position: document.getElementById('profile-position').value,
+                timezone: document.getElementById('timezone').value
+            };
+
+            // Save to localStorage
+            localStorage.setItem('profileSettings', JSON.stringify(formData));
+            showToast('Profile updated successfully');
+        });
+
+        // Theme Customization
+        document.getElementById('layout-density').addEventListener('change', (e) => {
+            document.body.classList.remove('compact', 'spacious');
+            if (e.target.value !== 'normal') {
+                document.body.classList.add(e.target.value);
+            }
+            localStorage.setItem('layoutDensity', e.target.value);
+        });
+
+        document.getElementById('accent-color').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--secondary-color', e.target.value);
+            localStorage.setItem('accentColor', e.target.value);
+        });
+
+        // Data Controls
+        document.querySelector('.export-data').addEventListener('click', () => {
+            // Simulate export
+            const data = localStorage.getItem('profileSettings') || 'No data';
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'manager-data-export.json';
+            a.click();
+            showToast('Export initiated - check downloads');
+        });
+
+        document.querySelector('.reset-stats').addEventListener('click', () => {
+            if (confirm('WARNING: This will reset all statistics. Continue?')) {
+                localStorage.removeItem('profileSettings');
+                localStorage.removeItem('layoutDensity');
+                localStorage.removeItem('accentColor');
+                showToast('All data has been reset', 'warning');
+                setTimeout(() => location.reload(), 1500);
+            }
+        });
+
+        // Helper Function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize Settings
+        function loadSettings() {
+            // Profile
+            const savedProfile = JSON.parse(localStorage.getItem('profileSettings'));
+            if (savedProfile) {
+                document.getElementById('profile-name').value = savedProfile.name;
+                document.getElementById('profile-email').value = savedProfile.email;
+                document.getElementById('profile-position').value = savedProfile.position;
+                document.getElementById('timezone').value = savedProfile.timezone;
+            }
+
+            // Layout
+            const density = localStorage.getItem('layoutDensity') || 'normal';
+            document.getElementById('layout-density').value = density;
+            document.body.classList.add(density);
+
+            // Accent Color
+            const accent = localStorage.getItem('accentColor') || '#3498db';
+            document.getElementById('accent-color').value = accent;
+            document.documentElement.style.setProperty('--secondary-color', accent);
+        }
+
+        // Initial Load
+        loadSettings();
+    </script>
+</body>
+
+</html>

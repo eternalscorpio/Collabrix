@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Task Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base Light Theme */
+        :root {
+            --primary-bg: #fff5f7;
+            --secondary-bg: #ffffff;
+            --text-color: #c2185b;
+            --accent-1: #e91e63;
+            --accent-2: #f06292;
+            --status-color: #ff9100;
+            --card-bg: #ffffff;
+            --border-color: #f8bbd0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --primary-bg: #2a1b2d;
+            --secondary-bg: #3a2b3d;
+            --text-color: #f8e9ff;
+            --accent-1: #e87bf8;
+            --accent-2: #ffb347;
+            --card-bg: #3a2b3d;
+            --border-color: #4a3b4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui;
+            margin: 0;
+            padding: 0;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 350px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            display: grid;
+            gap: 20px;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            background: var(--secondary-bg);
+            border-left: 1px solid var(--border-color);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Task Items */
+        .task-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid var(--accent-1);
+            background: var(--card-bg);
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-todo { background: #e0e0e0; color: #616161; }
+        .status-progress { background: #bbdefb; color: #0d47a1; }
+        .status-done { background: #c8e6c9; color: #1b5e20; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 3px solid var(--accent-1);
+            font-weight: bold;
+        }
+
+        /* Chat */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar, .right-panel {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div style="display: flex; align-items: center; margin-bottom: 30px;">
+                <div style="width: 40px; height: 40px; background: var(--accent-1); border-radius: 50%; margin-right: 10px;"></div>
+                <div>
+                    <div style="font-weight: bold;">Employee Name</div>
+                    <div style="font-size: 12px; color: var(--accent-2);">Developer</div>
+                </div>
+            </div>
+
+            <nav>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;">
+                        <button class="tab-button active" style="width: 100%; text-align: left; background: none; border: none; color: var(--text-color); padding: 10px; border-radius: 6px; background: rgba(233,30,99,0.1);">
+                            <i class="fas fa-home" style="margin-right: 10px;"></i> Dashboard
+                        </button>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <button class="tab-button" style="width: 100%; text-align: left; background: none; border: none; color: var(--text-color); padding: 10px; border-radius: 6px;">
+                            <i class="fas fa-tasks" style="margin-right: 10px;"></i> My Tasks
+                        </button>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <button class="tab-button" style="width: 100%; text-align: left; background: none; border: none; color: var(--text-color); padding: 10px; border-radius: 6px;">
+                            <i class="fas fa-cog" style="margin-right: 10px;"></i> Settings
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div style="margin-top: 30px;">
+                <button id="theme-toggle" style="background: var(--accent-1); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer;">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 style="margin: 0;">Employee Dashboard</h1>
+
+            <!-- Upcoming Tasks -->
+            <div class="card">
+                <h2 style="margin-top: 0;"><i class="fas fa-calendar-alt" style="margin-right: 10px; color: var(--accent-1);"></i>Upcoming Tasks</h2>
+                <div class="task-item">
+                    <div>
+                        <div style="font-weight: bold;">Complete user authentication</div>
+                        <div style="font-size: 12px; color: var(--accent-2);">Due: Today</div>
+                    </div>
+                    <select class="status-select" style="padding: 5px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color);">
+                        <option>To Do</option>
+                        <option selected>In Progress</option>
+                        <option>Done</option>
+                    </select>
+                </div>
+                <div class="task-item">
+                    <div>
+                        <div style="font-weight: bold;">Fix login page bugs</div>
+                        <div style="font-size: 12px; color: var(--accent-2);">Due: Tomorrow</div>
+                    </div>
+                    <select class="status-select" style="padding: 5px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color);">
+                        <option selected>To Do</option>
+                        <option>In Progress</option>
+                        <option>Done</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Recently Updated -->
+            <div class="card">
+                <h2 style="margin-top: 0;"><i class="fas fa-sync-alt" style="margin-right: 10px; color: var(--accent-1);"></i>Recently Updated</h2>
+                <div class="task-item">
+                    <div>
+                        <div style="font-weight: bold;">API documentation</div>
+                        <div style="font-size: 12px; color: var(--accent-2);">Updated: 2 hours ago</div>
+                        <div style="font-size: 12px;"><i class="fas fa-comment" style="margin-right: 5px;"></i> "Please add examples" - Team Lead</div>
+                    </div>
+                    <span class="status-badge status-done">Done</span>
+                </div>
+            </div>
+
+            <!-- Announcements -->
+            <div class="card">
+                <h2 style="margin-top: 0;"><i class="fas fa-bullhorn" style="margin-right: 10px; color: var(--accent-1);"></i>Announcements</h2>
+                <div style="padding: 15px; background: rgba(233,30,99,0.05); border-radius: 6px; margin-bottom: 10px;">
+                    <div style="font-weight: bold;">Team Meeting Tomorrow</div>
+                    <div style="font-size: 14px;">Please prepare your weekly updates for the 10 AM meeting</div>
+                    <div style="font-size: 12px; color: var(--accent-2); margin-top: 5px;">From: Manager</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <!-- Notifications -->
+            <div class="card" style="border-radius: 0; border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0;"><i class="fas fa-bell" style="margin-right: 10px; color: var(--accent-1);"></i>Notifications</h2>
+                    <button style="background: none; border: none; color: var(--accent-1); cursor: pointer;">Mark all as read</button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; padding: 10px; background: rgba(233,30,99,0.05); border-radius: 6px; margin-bottom: 10px;">
+                        <div style="margin-right: 10px; color: var(--accent-1);"><i class="fas fa-tasks"></i></div>
+                        <div>
+                            <div>New task assigned: "Fix header alignment"</div>
+                            <div style="font-size: 12px; color: var(--accent-2);">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                        <div style="margin-right: 10px; color: var(--accent-1);"><i class="fas fa-comment"></i></div>
+                        <div>
+                            <div>You were mentioned in a comment</div>
+                            <div style="font-size: 12px; color: var(--accent-2);">1 hour ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="chat-container">
+                <div class="tabs" style="padding: 10px 15px 0 15px; border-bottom: 1px solid var(--border-color);">
+                    <div class="tab active">Team Chat</div>
+                    <div class="tab">1:1</div>
+                </div>
+                <div class="chat-messages">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; font-size: 12px;">Team Lead (10:30 AM)</div>
+                        <div style="background: rgba(233,30,99,0.05); padding: 10px; border-radius: 6px; display: inline-block; max-width: 80%;">
+                            Has everyone updated their task statuses?
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px; text-align: right;">
+                        <div style="font-weight: bold; font-size: 12px;">You (10:32 AM)</div>
+                        <div style="background: rgba(233,30,99,0.2); padding: 10px; border-radius: 6px; display: inline-block; max-width: 80%;">
+                            Yes, just updated mine!
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Type a message..." style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 20px; background: var(--card-bg); color: var(--text-color);">
+                    <button style="background: var(--accent-1); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        document.body.setAttribute('data-theme', currentTheme);
+        updateThemeButton();
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton();
+        });
+
+        function updateThemeButton() {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            themeToggle.innerHTML = currentTheme === 'light' 
+                ? '<i class="fas fa-moon"></i> Dark Mode' 
+                : '<i class="fas fa-sun"></i> Light Mode';
+        }
+
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Status Select Change
+        const statusSelects = document.querySelectorAll('.status-select');
+        statusSelects.forEach(select => {
+            select.addEventListener('change', (e) => {
+                const taskItem = e.target.closest('.task-item');
+                // Here you would typically send an API request to update the task status
+                console.log(`Task status updated to: ${e.target.value}`);
+            });
+        });
+    </script>
+</body>
+</html>

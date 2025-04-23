@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Lead Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            color: #222;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #2f3542;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .sidebar {
+            background: #1e272e;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar {
+            background: #57606f;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .profile-info h3 {
+            font-size: 1rem;
+        }
+
+        .profile-info p {
+            font-size: 0.85rem;
+            color: #ced6e0;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #dfe4ea;
+            text-align: left;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: #57606f;
+        }
+
+        .dark-mode .nav-item:hover,
+        .dark-mode .nav-item.active {
+            background-color: #485460;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            margin-top: 2rem;
+        }
+
+        #theme-switcher {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: #1e272e;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        #theme-switcher:hover {
+            background: #485460;
+        }
+
+        .dark-mode #theme-switcher {
+            background: #57606f;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f1f2f6;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .main-content {
+            background: #2d3436;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            color: #2f3542;
+        }
+
+        .dark-mode h1 {
+            color: #f0f0f0;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .summary-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .dark-mode .summary-card {
+            background: #3d3d3d;
+            color: #f0f0f0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-card .count {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .summary-card .subtext {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dark-mode .summary-card .subtext {
+            color: #aaa;
+        }
+
+        .summary-card.todo {
+            border-left: 6px solid #ff4757;
+        }
+
+        .summary-card.progress {
+            border-left: 6px solid #ffa502;
+        }
+
+        .summary-card.done {
+            border-left: 6px solid #2ed573;
+        }
+
+        /* Team Overview & Tasks */
+        .team-overview,
+        .personal-tasks,
+        .kanban-board,
+        .kanban-column,
+        .kanban-task {
+            background: #fff;
+            padding: 1.25rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .dark-mode .team-overview,
+        .dark-mode .personal-tasks,
+        .dark-mode .kanban-board,
+        .dark-mode .kanban-column,
+        .dark-mode .kanban-task {
+            background: #3d3d3d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            color: #f0f0f0;
+        }
+
+        .task-list,
+        .member-list {
+            margin-top: 1rem;
+        }
+
+        /* Task Modal */
+        .task-creation-modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 90%;
+            max-width: 600px;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .task-creation-modal {
+            background: #3d3d3d;
+            color: #f0f0f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-creation-modal .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .task-creation-modal .form-columns {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .task-creation-modal label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .task-creation-modal input,
+        .task-creation-modal textarea,
+        .task-creation-modal select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .task-creation-modal input,
+        .dark-mode .task-creation-modal textarea,
+        .dark-mode .task-creation-modal select {
+            background: #555;
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .new-task-btn {
+            padding: 0.6rem 1rem;
+            background: #1e90ff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .new-task-btn:hover {
+            background: #187bcd;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            border: 1px solid #ccc;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .cancel-btn {
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        .cancel-btn:hover {
+            background: #f1f1f1;
+        }
+
+        .dark-mode .cancel-btn:hover {
+            background: #555;
+        }
+
+        .task-management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .kanban-column {
+            min-width: 200px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .kanban-column h3 {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .dark-mode .kanban-column h3 {
+            border-bottom-color: #555;
+        }
+
+        .kanban-task {
+            padding: 1rem;
+            cursor: move;
+            border-left: 4px solid #1e90ff;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kanban-task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .kanban-task:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .kanban-task h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .kanban-task p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .dark-mode .kanban-task p {
+            color: #aaa;
+        }
+
+        .kanban-task .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .dark-mode .task-btn {
+            color: #aaa;
+        }
+
+        .task-btn:hover {
+            color: #1e90ff;
+        }
+
+        /* Insights Panel */
+        .metrics-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            margin-top: 2rem;
+        }
+
+        .metric-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s;
+        }
+
+        .dark-mode .metric-card {
+            background: #3d3d3d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .dark-mode .metric-card h3 {
+            color: #aaa;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            color: #2f3542;
+            font-weight: bold;
+        }
+
+        .dark-mode .metric-value {
+            color: #f0f0f0;
+        }
+
+        .metric-chart {
+            height: 100px;
+            margin-top: 1rem;
+            background: #f1f2f6;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-mode .metric-chart {
+            background: #555;
+        }
+
+        .metric-chart::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 78%;
+            height: 100%;
+            background: #1e90ff;
+        }
+
+        .metric-card:nth-child(2) .metric-chart::after {
+            width: 60%;
+            background: #2ed573;
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            max-height: 400px;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .chat-panel {
+            background: #3d3d3d;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            padding: 0.75rem;
+            background: #f1f2f6;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dark-mode .chat-header {
+            background: #555;
+            border-bottom-color: #666;
+        }
+
+        .chat-tabs button {
+            padding: 0.25rem 0.75rem;
+            border: none;
+            background: #dcdde1;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dark-mode .chat-tabs button {
+            background: #666;
+            color: #f0f0f0;
+        }
+
+        .chat-tabs .active {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0.75rem;
+            background: #f1f2f6;
+            border-radius: 6px;
+            max-width: 80%;
+        }
+
+        .dark-mode .message {
+            background: #555;
+        }
+
+        .message strong {
+            color: #1e90ff;
+        }
+
+        .dark-mode .message strong {
+            color: #4da6ff;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 0.75rem;
+            border-top: 1px solid #ccc;
+        }
+
+        .dark-mode .chat-input {
+            border-top-color: #666;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .chat-input input {
+            background: #555;
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        .send-btn {
+            background: #1e90ff;
+            color: white;
+            padding: 0.6rem 1rem;
+            margin-left: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #187bcd;
+        }
+
+        /* Notification Panel */
+        .notification-panel {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .dark-mode .notification-panel {
+            background: #3d3d3d;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-panel h2 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .dark-mode .notification-panel h2 {
+            color: #f0f0f0;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .dark-mode .notification-item {
+            border-bottom-color: #555;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            color: #1e90ff;
+            margin-right: 1rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-content p {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .dark-mode .notification-content p {
+            color: #f0f0f0;
+        }
+
+        .notification-time {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .dark-mode .notification-time {
+            color: #aaa;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-layout {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .dashboard-main {
+            flex: 3;
+        }
+
+        .dashboard-sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Team Activity Card */
+        .team-overview h2,
+        .personal-tasks h2 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .dark-mode .team-overview h2,
+        .dark-mode .personal-tasks h2 {
+            color: #f0f0f0;
+        }
+
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #1e90ff;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .member-item {
+            background: #555;
+        }
+
+        .member-info {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .dark-mode .member-info {
+            color: #f0f0f0;
+        }
+
+        .member-info .activity {
+            color: #555;
+            font-style: italic;
+        }
+
+        .dark-mode .member-info .activity {
+            color: #aaa;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .status-badge.in-progress {
+            background: #ffa502;
+        }
+
+        .status-badge.done {
+            background: #2ed573;
+        }
+
+        /* Assignments Card */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #1e90ff;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .task-item {
+            background: #555;
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+        }
+
+        .task-status {
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .task-status.due {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        .task-status.in-progress {
+            background: #ffa502;
+            color: #fff;
+        }
+
+        .task-status.done {
+            background: #2ed573;
+            color: #fff;
+        }
+
+        /* Settings Form */
+        .settings-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .settings-form input,
+        .settings-form select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .settings-form input,
+        .dark-mode .settings-form select {
+            background: #555;
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        /* Drag and Drop */
+        .kanban-task.dragging {
+            opacity: 0.5;
+            background: #f1f2f6;
+        }
+
+        .dark-mode .kanban-task.dragging {
+            background: #555;
+        }
+
+        .kanban-column.drop-zone {
+            background: rgba(30, 144, 255, 0.1);
+            border: 2px dashed #1e90ff;
+        }
+
+        .dark-mode .kanban-column.drop-zone {
+            background: rgba(30, 144, 255, 0.2);
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            display: none;
+            padding: 1rem;
+            background: #f1f2f6;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .bulk-actions {
+            background: #555;
+        }
+
+        .bulk-actions.active {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bulk-actions select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .dark-mode .bulk-actions select {
+            background: #666;
+            border-color: #777;
+            color: #f0f0f0;
+        }
+
+        /* File Upload */
+        .file-upload {
+            margin-top: 1rem;
+        }
+
+        .file-upload-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #f1f2f6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .file-upload-btn {
+            background: #555;
+            color: #f0f0f0;
+        }
+
+        .file-upload-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .dark-mode .file-upload-btn:hover {
+            background: #666;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 0.5rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f1f2f6;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark-mode .file-item {
+            background: #555;
+        }
+
+        .file-item i {
+            margin-right: 0.5rem;
+            color: #666;
+        }
+
+        .dark-mode .file-item i {
+            color: #aaa;
+        }
+
+        .file-item .file-name {
+            flex: 1;
+        }
+
+        .file-item .file-delete {
+            color: #ff4757;
+            cursor: pointer;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 1.5rem;
+        }
+
+        .comment-list {
+            margin-top: 1rem;
+        }
+
+        .comment-item {
+            padding: 1rem;
+            background: #f1f2f6;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .dark-mode .comment-item {
+            background: #555;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #1e90ff;
+        }
+
+        .comment-time {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .dark-mode .comment-time {
+            color: #aaa;
+        }
+
+        .comment-form {
+            margin-top: 1.5rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .comment-form textarea {
+            background: #555;
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        .comment-form button {
+            padding: 0.5rem 1rem;
+            background: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+
+            .kanban-board {
+                flex-direction: column;
+            }
+
+            .kanban-column {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+
+            .profile-header {
+                margin-bottom: 0;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .theme-toggle {
+                margin-top: 0;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .form-columns {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="profile-header">
+                <div class="avatar">TL</div>
+                <div class="profile-info">
+                    <h3>Team Lead Name</h3>
+                    <p>Engineering Team</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+                <button class="nav-item" data-section="tasks">
+                    <i class="fas fa-tasks"></i> Task Management
+                </button>
+                <button class="nav-item" data-section="insights">
+                    <i class="fas fa-chart-line"></i> Team Insights
+                </button>
+                <button class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </nav>
+
+            <div class="theme-toggle">
+                <button id="theme-switcher">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h1>Team Dashboard</h1>
+                <div class="dashboard-layout">
+                    <!-- Main Dashboard Content -->
+                    <div class="dashboard-main">
+                        <div class="dashboard-grid">
+                            <!-- Task Summary Cards -->
+                            <div class="summary-card todo">
+                                <h3>To-Do</h3>
+                                <div class="count">12</div>
+                                <div class="subtext">Pending Tasks</div>
+                            </div>
+                            <div class="summary-card progress">
+                                <h3>In Progress</h3>
+                                <div class="count">8</div>
+                                <div class="subtext">Active Tasks</div>
+                            </div>
+                            <div class="summary-card done">
+                                <h3>Completed</h3>
+                                <div class="count">15</div>
+                                <div class="subtext">This Sprint</div>
+                            </div>
+
+                            <!-- Team Overview -->
+                            <div class="team-overview">
+                                <h2>Team Activity</h2>
+                                <div class="member-list">
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <strong>Alice</strong>
+                                            <span class="activity">completed</span>
+                                            <em>"Fix UI bugs on Dashboard"</em>
+                                        </div>
+                                        <span class="activity-time">10 mins ago</span>
+                                    </div>
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <strong>Bob</strong>
+                                            <span class="activity">moved</span>
+                                            <em>"Setup API Integration"</em> to <span
+                                                class="status-badge in-progress">In Progress</span>
+                                        </div>
+                                        <span class="activity-time">1 hour ago</span>
+                                    </div>
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <strong>Clara</strong>
+                                            <span class="activity">commented on</span>
+                                            <em>"Refactor Task Module"</em>
+                                        </div>
+                                        <span class="activity-time">Yesterday</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Personal Tasks -->
+                            <div class="personal-tasks">
+                                <h2>My Assignments</h2>
+                                <div class="task-list">
+                                    <div class="task-item">
+                                        <input type="checkbox" id="task1">
+                                        <label for="task1">Finalize Sprint Goals</label>
+                                        <span class="task-status due">Due: Apr 25</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <input type="checkbox" id="task2">
+                                        <label for="task2">Review Team PRs</label>
+                                        <span class="task-status in-progress">In Progress</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <input type="checkbox" id="task3" checked>
+                                        <label for="task3">Submit Weekly Report</label>
+                                        <span class="task-status done">Done</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="dashboard-sidebar">
+                        <!-- Notification Panel -->
+                        <div class="notification-panel">
+                            <h2>Notifications</h2>
+                            <div class="notification-item">
+                                <i class="fas fa-tasks notification-icon"></i>
+                                <div class="notification-content">
+                                    <p><strong>New Task Assigned:</strong> "Design Landing Page"</p>
+                                    <span class="notification-time">5 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-comment notification-icon"></i>
+                                <div class="notification-content">
+                                    <p><strong>Comment:</strong> "Please review the API documentation."</p>
+                                    <span class="notification-time">1 hour ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-check-circle notification-icon"></i>
+                                <div class="notification-content">
+                                    <p><strong>Task Completed:</strong> "Fix UI bugs on Dashboard"</p>
+                                    <span class="notification-time">Yesterday</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Panel -->
+                        <div class="chat-panel">
+                            <div class="chat-header">
+                                <h3>Team Chat</h3>
+                                <div class="chat-tabs">
+                                    <button class="active">Group</button>
+                                    <button>1:1</button>
+                                </div>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="message">
+                                    <strong>Bob:</strong> Started integrating the new APIs 🚀
+                                </div>
+                                <div class="message">
+                                    <strong>Alice:</strong> Great! Let me know if you need review help.
+                                </div>
+                                <div class="message">
+                                    <strong>You:</strong> Team, let's wrap current sprint issues by Friday!
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" placeholder="Type message...">
+                                <button class="send-btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Task Management Section -->
+            <section id="tasks" class="content-section">
+                <div class="task-management-header">
+                    <h1>Task Management</h1>
+                    <button class="new-task-btn">
+                        <i class="fas fa-plus"></i> Create Task
+                    </button>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="bulk-actions">
+                    <div>
+                        <span id="selected-count">0</span> tasks selected
+                    </div>
+                    <div>
+                        <select id="bulk-action">
+                            <option value="">Bulk Actions</option>
+                            <option value="assign">Assign to...</option>
+                            <option value="move">Move to...</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                        <button id="apply-bulk-action">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Task Creation Modal -->
+                <div class="task-creation-modal">
+                    <form id="task-form">
+                        <div class="form-group">
+                            <label>Task Title</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea rows="4"></textarea>
+                        </div>
+                        <div class="form-columns">
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select>
+                                    <option>High</option>
+                                    <option selected>Medium</option>
+                                    <option>Low</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="new-task-btn">
+                                <i class="fas fa-check"></i> Save Task
+                            </button>
+                            <button type="button" class="cancel-btn" id="close-task-modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Kanban Board -->
+                <div class="kanban-board">
+                    <div class="kanban-column">
+                        <h3>To-Do</h3>
+                        <div class="kanban-task">
+                            <h4>Design Landing Page</h4>
+                            <p>Prepare the initial design for the landing page.</p>
+                            <div class="task-actions">
+                                <button class="task-btn">Edit</button>
+                                <button class="task-btn">Delete</button>
+                            </div>
+                        </div>
+                        <div class="kanban-task">
+                            <h4>Write API Documentation</h4>
+                            <p>Document the new API endpoints for the team.</p>
+                            <div class="task-actions">
+                                <button class="task-btn">Edit</button>
+                                <button class="task-btn">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <h3>In Progress</h3>
+                        <div class="kanban-task">
+                            <h4>Setup API Integration</h4>
+                            <p>Integrate the backend APIs with the frontend.</p>
+                            <div class="task-actions">
+                                <button class="task-btn">Edit</button>
+                                <button class="task-btn">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column" data-status="under-review">
+                        <h3>Under Review</h3>
+                        <!-- Tasks will be dragged here -->
+                        <div class="kanban-task">
+                            <h4>Code Review for Task Module</h4>
+                            <p>Review the code changes for the task module.</p>
+                            <div class="task-actions">
+                                <button class="task-btn">Edit</button>
+                                <button class="task-btn">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <h3>Completed</h3>
+                        <div class="kanban-task">
+                            <h4>Fix UI Bugs on Dashboard</h4>
+                            <p>Resolved layout and styling issues on the dashboard.</p>
+                            <div class="task-actions">
+                                <button class="task-btn">Edit</button>
+                                <button class="task-btn">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Insights Section -->
+            <section id="insights" class="content-section">
+                <h1>Team Insights</h1>
+                <div class="metrics-grid">
+                    <!-- Bar Graph for Team Performance -->
+                    <div class="metric-card">
+                        <h3>Team Performance</h3>
+                        <canvas id="teamPerformanceBarChart"></canvas>
+                    </div>
+
+                    <!-- Line Graph for Team Performance Over Time -->
+                    <div class="metric-card">
+                        <h3>Performance Over Time</h3>
+                        <canvas id="teamPerformanceLineChart"></canvas>
+                    </div>
+
+                    <!-- Pie Chart for Projects in a Year -->
+                    <div class="metric-card">
+                        <h3>Projects in a Year</h3>
+                        <canvas id="projectsPieChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <h1>Settings</h1>
+                <form class="settings-form">
+                    <div class="form-group">
+                        <label for="team-name">Team Name</label>
+                        <input type="text" id="team-name" placeholder="Enter your team name">
+                    </div>
+                    <div class="form-group">
+                        <label for="notification-preferences">Notification Preferences</label>
+                        <select id="notification-preferences">
+                            <option>Email</option>
+                            <option>SMS</option>
+                            <option>Push Notifications</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="new-task-btn">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script>
+
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.content-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove 'active' class from all nav items and sections
+                navItems.forEach(nav => nav.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+
+                // Add 'active' class to the clicked nav item and corresponding section
+                item.classList.add('active');
+                const sectionId = item.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // JavaScript for Modal Functionality
+        const taskModal = document.querySelector('.task-creation-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const newTaskBtn = document.querySelector('.new-task-btn');
+        const closeTaskModal = document.getElementById('close-task-modal');
+
+        newTaskBtn.addEventListener('click', () => {
+            taskModal.style.display = 'block';
+            modalOverlay.classList.add('active');
+        });
+
+        closeTaskModal.addEventListener('click', () => {
+            taskModal.style.display = 'none';
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', () => {
+            taskModal.style.display = 'none';
+            modalOverlay.classList.remove('active');
+        });
+
+        // Bar Graph: Team Performance
+        const teamPerformanceBarChart = new Chart(document.getElementById('teamPerformanceBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Alice', 'Bob', 'Clara', 'David', 'Eve'],
+                datasets: [{
+                    label: 'Tasks Completed',
+                    data: [12, 15, 8, 10, 14],
+                    backgroundColor: ['#1e90ff', '#ffa502', '#2ed573', '#ff4757', '#3742fa'],
+                    borderColor: '#ccc',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: true, text: 'Tasks Completed by Team Members' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Line Graph: Team Performance Over Time
+        const teamPerformanceLineChart = new Chart(document.getElementById('teamPerformanceLineChart'), {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Tasks Completed',
+                    data: [10, 12, 15, 20, 18, 22, 25],
+                    borderColor: '#1e90ff',
+                    backgroundColor: 'rgba(30, 144, 255, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: true, text: 'Team Performance Over Time' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Pie Chart: Projects in a Year
+        const projectsPieChart = new Chart(document.getElementById('projectsPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Completed', 'In Progress', 'Pending'],
+                datasets: [{
+                    label: 'Projects',
+                    data: [12, 5, 3],
+                    backgroundColor: ['#2ed573', '#ffa502', '#ff4757']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: true, text: 'Projects in a Year' }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Drag and Drop Functionality
+        const tasks = document.querySelectorAll('.kanban-task');
+        const columns = document.querySelectorAll('.kanban-column');
+
+        tasks.forEach(task => {
+            task.addEventListener('dragstart', () => {
+                task.classList.add('dragging');
+            });
+
+            task.addEventListener('dragend', () => {
+                task.classList.remove('dragging');
+            });
+        });
+
+        columns.forEach(column => {
+            column.addEventListener('dragover', e => {
+                e.preventDefault();
+                const draggingTask = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(column, e.clientY);
+                if (afterElement == null) {
+                    column.appendChild(draggingTask);
+                } else {
+                    column.insertBefore(draggingTask, afterElement);
+                }
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.kanban-task:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+    </script>
+</body>
+
+</html>

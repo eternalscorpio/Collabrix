@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #fff5f7;
+            --secondary-bg: #ffffff;
+            --text-color: #c2185b;
+            --accent-1: #e91e63;
+            --accent-2: #f06292;
+            --border-color: #f8bbd0;
+            --card-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #2a1b2d;
+            --secondary-bg: #3a2b3d;
+            --text-color: #f8e9ff;
+            --accent-1: #e87bf8;
+            --accent-2: #ffb347;
+            --border-color: #4a3b4d;
+            --card-bg: #3a2b3d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui;
+            margin: 0;
+            padding: 0;
+            background: var(--primary-bg);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Task Board Header */
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--secondary-bg);
+            color: var(--text-color);
+        }
+
+        /* Task View Toggle */
+        .view-toggle {
+            display: flex;
+            background: var(--secondary-bg);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .view-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .view-option:last-child {
+            border-right: none;
+        }
+
+        .view-option.active {
+            background: var(--accent-1);
+            color: white;
+        }
+
+        /* Task List View */
+        .task-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent-1);
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: var(--accent-2);
+            margin-bottom: 15px;
+        }
+
+        .task-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-todo {
+            background: #e0e0e0;
+            color: #616161;
+        }
+
+        .status-progress {
+            background: #bbdefb;
+            color: #0d47a1;
+        }
+
+        .status-done {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .status-review {
+            background: #fff0c2;
+            color: #e65100;
+        }
+
+        /* Attachments */
+        .attachments {
+            margin: 15px 0;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .attachment-icon {
+            margin-right: 10px;
+            color: var(--accent-1);
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .comment {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--accent-1);
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        /* Kanban Board */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kanban-column {
+            background: var(--column-bg);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 600px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-1);
+        }
+
+        .column-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .column-count {
+            background: var(--accent-1);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* Kanban Cards */
+        .kanban-card {
+            background: var(--card-bg);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: grab;
+            border-top: 3px solid var(--accent-1);
+        }
+
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+
+        .kanban-card-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .kanban-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--accent-2);
+            margin-bottom: 10px;
+        }
+
+        .kanban-card-priority {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .priority-high {
+            background: #f44336;
+        }
+
+        .priority-medium {
+            background: #ff9800;
+        }
+
+        .priority-low {
+            background: #4caf50;
+        }
+
+        .kanban-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .card-attachments,
+        .card-comments {
+            display: flex;
+            align-items: center;
+            color: var(--accent-2);
+        }
+
+        .card-attachments i,
+        .card-comments i {
+            margin-right: 4px;
+        }
+
+        /* Drag and Drop Styles */
+        .kanban-column.drop-zone {
+            background: rgba(233, 30, 99, 0.1);
+            border: 2px dashed var(--accent-1);
+        }
+
+        .kanban-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+
+            .kanban-column {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Task Board Header -->
+        <div class="task-header">
+            <h1>My Tasks</h1>
+            <div class="view-toggle">
+                <div class="view-option active" onclick="switchView('list')">
+                    <i class="fas fa-list"></i> List
+                </div>
+                <div class="view-option" onclick="switchView('kanban')">
+                    <i class="fas fa-columns"></i> Kanban
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <select class="filter-select" id="status-filter">
+                <option value="all">All Statuses</option>
+                <option value="todo">To Do</option>
+                <option value="progress">In Progress</option>
+                <option value="review">In Review</option>
+                <option value="done">Done</option>
+            </select>
+
+            <select class="filter-select" id="priority-filter">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <select class="filter-select" id="date-filter">
+                <option value="all">All Dates</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="overdue">Overdue</option>
+            </select>
+        </div>
+
+        <!-- Task List View -->
+        <div class="task-list" id="task-list-view">
+            <!-- Task Card 1 -->
+            <div class="task-card">
+                <div class="task-title">
+                    <span>Implement user profile page</span>
+                    <select class="task-status-select" onchange="updateTaskStatus(this)">
+                        <option value="todo">To Do</option>
+                        <option value="progress" selected>In Progress</option>
+                        <option value="review">In Review</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="task-meta">
+                    <span><i class="far fa-calendar-alt"></i> Due: May 15</span>
+                    <span><i class="fas fa-flag" style="color: #f44336;"></i> High Priority</span>
+                </div>
+                <p>Create the responsive profile page with all user information sections.</p>
+
+                <!-- Attachments -->
+                <div class="attachments">
+                    <h4><i class="fas fa-paperclip"></i> Attachments</h4>
+                    <div class="attachment-item">
+                        <i class="fas fa-file-pdf attachment-icon"></i>
+                        <span>design-specs.pdf</span>
+                        <a href="#" style="margin-left: auto;"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h4><i class="far fa-comments"></i> Comments</h4>
+
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">Team Lead</span>
+                            <span>May 10, 10:30 AM</span>
+                        </div>
+                        <p>Please make sure to include the social media links section.</p>
+                    </div>
+
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">You</span>
+                            <span>May 10, 11:15 AM</span>
+                        </div>
+                        <p>Working on it now. Will include all sections from the spec.</p>
+                    </div>
+
+                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                    <button
+                        style="background: var(--accent-1); color: white; border: none; padding: 8px 16px; border-radius: 4px; margin-top: 10px; cursor: pointer;">
+                        Post Comment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task Card 2 -->
+            <div class="task-card">
+                <div class="task-title">
+                    <span>Fix login page validation</span>
+                    <select class="task-status-select" onchange="updateTaskStatus(this)">
+                        <option value="todo" selected>To Do</option>
+                        <option value="progress">In Progress</option>
+                        <option value="review">In Review</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="task-meta">
+                    <span><i class="far fa-calendar-alt"></i> Due: May 18</span>
+                    <span><i class="fas fa-flag" style="color: #ff9800;"></i> Medium Priority</span>
+                </div>
+                <p>Address the validation issues reported in ticket #1234.</p>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h4><i class="far fa-comments"></i> Comments</h4>
+                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                    <button
+                        style="background: var(--accent-1); color: white; border: none; padding: 8px 16px; border-radius: 4px; margin-top: 10px; cursor: pointer;">
+                        Post Comment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban View (Hidden by default) -->
+        <!-- Kanban Board -->
+        <div class="kanban-board hidden" id="kanban-board">
+            <!-- To Do Column -->
+            <div class="kanban-column" id="todo-column" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        To Do <span class="column-count">2</span>
+                    </div>
+                    <i class="fas fa-plus"></i>
+                </div>
+
+                <div class="kanban-card" draggable="true" ondragstart="drag(event)" id="task1">
+                    <div class="kanban-card-title">Implement user profile page</div>
+                    <div class="kanban-card-meta">
+                        <span><i class="far fa-calendar-alt"></i> May 15</span>
+                        <span><span class="kanban-card-priority priority-high"></span> High</span>
+                    </div>
+                    <p style="font-size: 14px; margin: 8px 0;">Create the responsive profile page with all user
+                        information sections.</p>
+                    <div class="kanban-card-footer">
+                        <div class="card-attachments">
+                            <i class="fas fa-paperclip"></i> 1
+                        </div>
+                        <div class="card-comments">
+                            <i class="far fa-comment"></i> 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress Column -->
+            <div class="kanban-column" id="progress-column" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        In Progress <span class="column-count">1</span>
+                    </div>
+                    <i class="fas fa-plus"></i>
+                </div>
+
+                <div class="kanban-card" draggable="true" ondragstart="drag(event)" id="task2">
+                    <div class="kanban-card-title">Fix login validation</div>
+                    <div class="kanban-card-meta">
+                        <span><i class="far fa-calendar-alt"></i> May 18</span>
+                        <span><span class="kanban-card-priority priority-medium"></span> Medium</span>
+                    </div>
+                    <p style="font-size: 14px; margin: 8px 0;">Address the validation issues reported in ticket #1234.
+                    </p>
+                    <div class="kanban-card-footer">
+                        <div class="card-attachments">
+                            <i class="fas fa-paperclip"></i> 0
+                        </div>
+                        <div class="card-comments">
+                            <i class="far fa-comment"></i> 0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Review Column -->
+            <div class="kanban-column" id="review-column" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        In Review <span class="column-count">0</span>
+                    </div>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <!-- Empty state -->
+                <div style="text-align: center; padding: 20px; color: var(--accent-2);">
+                    <i class="far fa-smile" style="font-size: 24px;"></i>
+                    <p>No tasks in review</p>
+                </div>
+            </div>
+
+            <!-- Done Column -->
+            <div class="kanban-column" id="done-column" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        Done <span class="column-count">1</span>
+                    </div>
+                    <i class="fas fa-plus"></i>
+                </div>
+
+                <div class="kanban-card">
+                    <div class="kanban-card-title">Update API documentation</div>
+                    <div class="kanban-card-meta">
+                        <span><i class="far fa-calendar-alt"></i> May 10</span>
+                        <span><span class="kanban-card-priority priority-low"></span> Low</span>
+                    </div>
+                    <p style="font-size: 14px; margin: 8px 0;">Add examples for all endpoint responses.</p>
+                    <div class="kanban-card-footer">
+                        <div class="card-attachments">
+                            <i class="fas fa-paperclip"></i> 1
+                        </div>
+                        <div class="card-comments">
+                            <i class="far fa-comment"></i> 3
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Filter Functionality
+        document.getElementById('status-filter').addEventListener('change', filterTasks);
+        document.getElementById('priority-filter').addEventListener('change', filterTasks);
+        document.getElementById('date-filter').addEventListener('change', filterTasks);
+
+        function filterTasks() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const priorityFilter = document.getElementById('priority-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+
+            // Here you would implement the actual filtering logic
+            console.log(`Filtering by: Status=${statusFilter}, Priority=${priorityFilter}, Date=${dateFilter}`);
+        }
+
+        // Theme Toggle (if needed)
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function switchView(viewType) {
+            const kanbanBoard = document.getElementById('kanban-board');
+            const taskListView = document.getElementById('task-list-view');
+
+            if (viewType === 'kanban') {
+                kanbanBoard.classList.remove('hidden');
+                taskListView.classList.add('hidden');
+            } else if (viewType === 'list') {
+                kanbanBoard.classList.add('hidden');
+                taskListView.classList.remove('hidden');
+            }
+
+            // Update active tab style
+            const viewOptions = document.querySelectorAll('.view-option');
+            viewOptions.forEach(option => option.classList.remove('active'));
+
+            if (viewType === 'kanban') {
+                viewOptions[1].classList.add('active');
+            } else if (viewType === 'list') {
+                viewOptions[0].classList.add('active');
+            }
+        }
+
+        // Drag and Drop Functions
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drop-zone');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+
+            // Remove drop zone styling
+            document.querySelectorAll('.kanban-column').forEach(col => {
+                col.classList.remove('drop-zone');
+            });
+
+            // Remove dragging class
+            draggedElement.classList.remove('dragging');
+
+            // Get the target column
+            const targetColumn = ev.currentTarget;
+
+            // Only append if it's a different column
+            if (!draggedElement.parentNode.isSameNode(targetColumn)) {
+                targetColumn.appendChild(draggedElement);
+
+                // Here you would update the task status via API
+                const newStatus = targetColumn.id.replace('-column', '');
+                console.log(`Task ${data} moved to ${newStatus}`);
+                updateTaskCounts();
+            }
+        }
+
+        // Clean up drop zones when leaving
+        document.querySelectorAll('.kanban-column').forEach(col => {
+            col.addEventListener('dragleave', function () {
+                this.classList.remove('drop-zone');
+            });
+        });
+
+        // Update task counts in column headers
+        function updateTaskCounts() {
+            document.querySelectorAll('.kanban-column').forEach(column => {
+                const count = column.querySelectorAll('.kanban-card').length;
+                const countElement = column.querySelector('.column-count');
+
+                // Don't count empty state messages
+                const isEmptyState = column.querySelector('.fa-smile') !== null;
+                countElement.textContent = isEmptyState ? 0 : count;
+            });
+        }
+
+        // Initialize
+        updateTaskCounts();
+    </script>
+</body>
+
+</html>
