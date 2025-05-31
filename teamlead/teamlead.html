@@ -34,11 +34,11 @@
         /* Sidebar */
         .sidebar {
             width: 260px;
-            background: #2f3542;
-            color: #fff;
+            background: #fff9f9;
+            color: #1E90FF;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 50px;
             padding: 1.5rem 1rem;
             transition: background-color 0.3s;
         }
@@ -53,8 +53,8 @@
             margin-bottom: 2rem;
         }
 
-        .avatar {
-            background: #57606f;
+        .avatar img{
+            background: #1E90FF;
             border-radius: 50%;
             width: 48px;
             height: 48px;
@@ -73,7 +73,7 @@
 
         .profile-info p {
             font-size: 0.85rem;
-            color: #ced6e0;
+            color: #414141;
         }
 
         .nav-menu {
@@ -85,7 +85,7 @@
         .nav-item {
             background: transparent;
             border: none;
-            color: #dfe4ea;
+            color: #595959;
             text-align: left;
             font-size: 1rem;
             padding: 0.75rem 1rem;
@@ -98,7 +98,8 @@
 
         .nav-item:hover,
         .nav-item.active {
-            background-color: #57606f;
+            background-color: #1E90FF;
+            color: #fff;
         }
 
         .dark-mode .nav-item:hover,
@@ -307,7 +308,8 @@
             margin-top: 1.5rem;
         }
 
-        .new-task-btn {
+        
+        .new-task-btn, .create-btn {
             padding: 0.6rem 1rem;
             background: #1e90ff;
             color: #fff;
@@ -435,72 +437,206 @@
         }
 
         /* Insights Panel */
-        .metrics-grid {
-            display: grid;
+
+        .insights-filters {
+            display: flex;
             gap: 1.5rem;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            margin-top: 2rem;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .metric-card {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
-            transition: all 0.3s;
+        .filter-group {
+            flex: 1;
+            max-width: 200px;
         }
 
-        .dark-mode .metric-card {
-            background: #3d3d3d;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .metric-card h3 {
+        .filter-group label {
+            display: block;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            color: #555;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .dark-mode .metric-card h3 {
-            color: #aaa;
+        .filter-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+        }
+
+        .apply-filters-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Metrics Summary */
+        .metrics-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-mini-card {
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .metric-mini-card.alert {
+            border-left: 4px solid var(--danger);
         }
 
         .metric-value {
             font-size: 1.8rem;
-            color: #2f3542;
             font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
         }
 
-        .dark-mode .metric-value {
-            color: #f0f0f0;
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
         }
 
-        .metric-chart {
-            height: 100px;
-            margin-top: 1rem;
-            background: #f1f2f6;
-            border-radius: 6px;
+        .metric-trend {
+            font-size: 0.8rem;
+        }
+
+        .metric-trend.up {
+            color: var(--success);
+        }
+
+        .metric-trend.down {
+            color: var(--danger);
+        }
+
+        /* Charts Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+        }
+
+        .chart-container.wide {
+            grid-column: span 2;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            padding: 0.25rem 0.5rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .chart-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .chart-wrapper {
             position: relative;
-            overflow: hidden;
+            height: 250px;
+            margin-bottom: 1rem;
         }
 
-        .dark-mode .metric-chart {
-            background: #555;
+        .chart-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
         }
 
-        .metric-chart::after {
-            content: "";
+        .chart-recommendation {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            background: rgba(108, 92, 231, 0.05);
+            border-radius: 4px;
+        }
+
+        .chart-recommendation.alert {
+            background: rgba(214, 48, 49, 0.05);
+        }
+
+        .chart-recommendation i {
+            margin-right: 0.5rem;
+        }
+
+        /* Chart tooltip styles */
+        .chart-tooltip {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 78%;
-            height: 100%;
-            background: #1e90ff;
+            padding: 0.5rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
 
-        .metric-card:nth-child(2) .metric-chart::after {
-            width: 60%;
-            background: #2ed573;
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container.wide {
+                grid-column: span 1;
+            }
+
+            .insights-filters {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .filter-group {
+                max-width: 100%;
+            }
         }
 
         /* Chat Panel */
@@ -1106,6 +1242,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -1113,9 +1250,9 @@
         <!-- Sidebar Navigation -->
         <div class="sidebar">
             <div class="profile-header">
-                <div class="avatar">TL</div>
+                <div class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyhGoapCjobJf4FYQy9rK2dqTp9o7SZBSMTQ&s" alt="jamie dimon"></div>
                 <div class="profile-info">
-                    <h3>Team Lead Name</h3>
+                    <h3>Jamie Dimon</h3>
                     <p>Engineering Team</p>
                 </div>
             </div>
@@ -1365,7 +1502,7 @@
                             <div class="file-list"></div>
                         </div>
                         <div class="form-actions">
-                            <button type="submit">Create Task</button>
+                            <button type="submit" class="create-btn">Create Task</button>
                             <button type="button" class="cancel-btn">Cancel</button>
                         </div>
                     </form>
@@ -1435,36 +1572,153 @@
             <!-- Team Insights Section -->
             <section id="insights" class="content-section">
                 <h1>Team Performance</h1>
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <h3>Completion Rate</h3>
+
+                <!-- Interactive Filters -->
+                <div class="insights-filters">
+                    <div class="filter-group">
+                        <label for="time-range">Time Range:</label>
+                        <select id="time-range">
+                            <option value="7">Last 7 Days</option>
+                            <option value="14">Last 2 Weeks</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="team-member">Team Member:</label>
+                        <select id="team-member">
+                            <option value="all" selected>All Members</option>
+                            <option value="alice">Alice</option>
+                            <option value="bob">Bob</option>
+                            <option value="clara">Clara</option>
+                        </select>
+                    </div>
+                    <button class="apply-filters-btn">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+
+                <!-- Key Metrics Summary -->
+                <div class="metrics-summary">
+                    <div class="metric-mini-card">
                         <div class="metric-value">78%</div>
-                        <div class="metric-chart"></div>
+                        <div class="metric-label">Completion Rate</div>
+                        <div class="metric-trend up">↑ 5% from last period</div>
                     </div>
-                    <div class="metric-card">
-                        <h3>Average Response Time</h3>
-                        <div class="metric-value">2.4h</div>
-                        <div class="metric-chart"></div>
+                    <div class="metric-mini-card">
+                        <div class="metric-value">3.2d</div>
+                        <div class="metric-label">Avg. Turnaround</div>
+                        <div class="metric-trend down">↓ 0.5d improvement</div>
                     </div>
-                    <div class="metric-card">
-                        <h3>Tasks Completed</h3>
-                        <div class="metric-value">42</div>
-                        <div class="metric-chart"></div>
-                    </div>
-                    <div class="metric-card">
-                        <h3>Active Members</h3>
-                        <div class="metric-value">5/5</div>
-                        <div class="metric-chart"></div>
+                    <div class="metric-mini-card alert">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">Overdue Tasks</div>
+                        <div class="metric-trend up">↑ 3 from last week</div>
                     </div>
                 </div>
 
-                <div class="team-metrics">
-                    <h2>Member Performance</h2>
-                    <div class="member-metrics-grid">
-                        <!-- Dynamically loaded -->
+                <!-- Charts Grid -->
+                <div class="insights-grid">
+                    <!-- Task Completion Rate -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Task Completion Rate</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active" data-type="bar">Bar</button>
+                                <button class="chart-btn" data-type="line">Line</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="completionChart"></canvas>
+                            <div class="chart-tooltip"></div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="chart-recommendation">
+                                <i class="fas fa-lightbulb"></i> Focus on improving Clara's completion rate (65% vs team
+                                avg 78%)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workload Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Workload Distribution</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="workloadChart"></canvas>
+                            <div class="chart-legend"></div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="chart-recommendation alert">
+                                <i class="fas fa-exclamation-triangle"></i> Bob is handling 35% of tasks - consider
+                                redistributing
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Status Breakdown -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Task Status Breakdown</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="chart-recommendation">
+                                <i class="fas fa-lightbulb"></i> 22% of tasks stuck in "In Progress" - review blockers
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Turnaround Time -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Task Turnaround Time</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active" data-type="line">Trend</button>
+                                <button class="chart-btn" data-type="heatmap">Heatmap</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="turnaroundChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="chart-recommendation">
+                                <i class="fas fa-lightbulb"></i> Design tasks take 2.1x longer - consider pairing
+                                sessions
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Timeline -->
+                    <div class="chart-container wide">
+                        <div class="chart-header">
+                            <h3>Team Activity Timeline</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Collaboration Density -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Collaboration Density</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="collabChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="chart-recommendation">
+                                <i class="fas fa-lightbulb"></i> Alice provides most feedback (3.2 comments/task)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+
 
             <!-- Settings Section -->
             <section id="settings" class="content-section">
@@ -1472,7 +1726,7 @@
                 <form class="settings-form">
                     <div class="form-group">
                         <label for="displayName">Display Name</label>
-                        <input type="text" id="displayName" value="Team Lead Name">
+                        <input type="text" id="displayName" value="Jamie Dimon">
                     </div>
                     <div class="form-group">
                         <label for="teamName">Team Name</label>
@@ -1700,6 +1954,345 @@
             // Here you would typically save the settings to your database
             alert('Settings saved successfully!');
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Completion Rate Chart (Bar/Line)
+            const completionCtx = document.getElementById('completionChart').getContext('2d');
+            const completionChart = new Chart(completionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Alice', 'Bob', 'Clara', 'Team Avg'],
+                    datasets: [{
+                        label: 'Completion Rate %',
+                        data: [85, 82, 65, 78],
+                        backgroundColor: [
+                            'rgba(108, 92, 231, 0.7)',
+                            'rgba(108, 92, 231, 0.7)',
+                            'rgba(108, 92, 231, 0.7)',
+                            'rgba(0, 184, 148, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(108, 92, 231, 1)',
+                            'rgba(108, 92, 231, 1)',
+                            'rgba(108, 92, 231, 1)',
+                            'rgba(0, 184, 148, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: getChartOptions('Completion Rate %')
+            });
+
+            // Workload Distribution (Pie)
+            const workloadCtx = document.getElementById('workloadChart').getContext('2d');
+            const workloadChart = new Chart(workloadCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Alice', 'Bob', 'Clara'],
+                    datasets: [{
+                        data: [28, 35, 22],
+                        backgroundColor: [
+                            'rgba(108, 92, 231, 0.7)',
+                            'rgba(253, 203, 110, 0.7)',
+                            'rgba(0, 184, 148, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(108, 92, 231, 1)',
+                            'rgba(253, 203, 110, 1)',
+                            'rgba(0, 184, 148, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: getChartOptions('Tasks Assigned', true)
+            });
+
+            // Status Breakdown (Stacked Bar)
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(statusCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Alice', 'Bob', 'Clara'],
+                    datasets: [
+                        {
+                            label: 'To Do',
+                            data: [3, 5, 4],
+                            backgroundColor: 'rgba(214, 48, 49, 0.7)',
+                            borderColor: 'rgba(214, 48, 49, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'In Progress',
+                            data: [4, 6, 5],
+                            backgroundColor: 'rgba(253, 203, 110, 0.7)',
+                            borderColor: 'rgba(253, 203, 110, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Done',
+                            data: [12, 8, 6],
+                            backgroundColor: 'rgba(0, 184, 148, 0.7)',
+                            borderColor: 'rgba(0, 184, 148, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: getStackedBarOptions('Task Status')
+            });
+
+            // Turnaround Time (Line)
+            const turnaroundCtx = document.getElementById('turnaroundChart').getContext('2d');
+            const turnaroundChart = new Chart(turnaroundCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        {
+                            label: 'Design Tasks',
+                            data: [4.2, 3.8, 5.1, 4.5],
+                            borderColor: 'rgba(108, 92, 231, 1)',
+                            backgroundColor: 'rgba(108, 92, 231, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Dev Tasks',
+                            data: [2.1, 1.9, 2.3, 2.0],
+                            borderColor: 'rgba(0, 184, 148, 1)',
+                            backgroundColor: 'rgba(0, 184, 148, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Team Avg',
+                            data: [3.2, 2.9, 3.7, 3.3],
+                            borderColor: 'rgba(253, 203, 110, 1)',
+                            backgroundColor: 'rgba(253, 203, 110, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: getChartOptions('Days to Complete')
+            });
+
+            // Activity Timeline (Line)
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const activityChart = new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Tasks Created',
+                            data: [3, 5, 2, 4, 6, 1, 0],
+                            borderColor: 'rgba(108, 92, 231, 1)',
+                            backgroundColor: 'rgba(108, 92, 231, 0.1)',
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Tasks Completed',
+                            data: [2, 4, 3, 5, 3, 0, 0],
+                            borderColor: 'rgba(0, 184, 148, 1)',
+                            backgroundColor: 'rgba(0, 184, 148, 0.1)',
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Comments',
+                            data: [8, 12, 6, 10, 14, 2, 0],
+                            borderColor: 'rgba(9, 132, 227, 1)',
+                            backgroundColor: 'rgba(9, 132, 227, 0.1)',
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: getMultiAxisOptions('Daily Activity')
+            });
+
+            // Collaboration Density (Bubble)
+            const collabCtx = document.getElementById('collabChart').getContext('2d');
+            const collabChart = new Chart(collabCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Alice',
+                            data: [{ x: 12, y: 3.2, r: 15 }],
+                            backgroundColor: 'rgba(108, 92, 231, 0.7)',
+                            borderColor: 'rgba(108, 92, 231, 1)'
+                        },
+                        {
+                            label: 'Bob',
+                            data: [{ x: 8, y: 1.5, r: 10 }],
+                            backgroundColor: 'rgba(253, 203, 110, 0.7)',
+                            borderColor: 'rgba(253, 203, 110, 1)'
+                        },
+                        {
+                            label: 'Clara',
+                            data: [{ x: 6, y: 2.8, r: 12 }],
+                            backgroundColor: 'rgba(0, 184, 148, 0.7)',
+                            borderColor: 'rgba(0, 184, 148, 1)'
+                        }
+                    ]
+                },
+                options: getBubbleOptions('Tasks Completed', 'Avg Comments per Task')
+            });
+
+            // Chart type toggles
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const chartType = this.getAttribute('data-type');
+                    const chartContainer = this.closest('.chart-container');
+                    const chartId = chartContainer.querySelector('canvas').id;
+
+                    // Remove active class from all buttons in this group
+                    this.closest('.chart-actions').querySelectorAll('.chart-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    // Change chart type
+                    if (chartId === 'completionChart') {
+                        completionChart.config.type = chartType === 'line' ? 'line' : 'bar';
+                        completionChart.update();
+                    } else if (chartId === 'turnaroundChart') {
+                        if (chartType === 'heatmap') {
+                            // This would require a heatmap implementation
+                            alert('Heatmap view would be implemented here');
+                        } else {
+                            turnaroundChart.config.type = 'line';
+                            turnaroundChart.update();
+                        }
+                    }
+                });
+            });
+
+            // Tooltip functionality
+            document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
+                const tooltip = wrapper.querySelector('.chart-tooltip');
+                const canvas = wrapper.querySelector('canvas');
+
+                canvas.addEventListener('mousemove', function (e) {
+                    // This is a simplified example - real implementation would
+                    // need to map mouse position to chart data points
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    tooltip.style.left = `${x + 10}px`;
+                    tooltip.style.top = `${y + 10}px`;
+                    tooltip.style.opacity = '1';
+                    tooltip.textContent = `Value: ${Math.round(Math.random() * 100)}%`;
+                });
+
+                canvas.addEventListener('mouseout', function () {
+                    tooltip.style.opacity = '0';
+                });
+            });
+        });
+
+        // Chart configuration helpers
+        function getChartOptions(title, showLegend = false) {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: showLegend,
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            };
+        }
+
+        function getStackedBarOptions(title) {
+            const options = getChartOptions(title);
+            options.scales.x.stacked = true;
+            options.scales.y.stacked = true;
+            return options;
+        }
+
+        function getMultiAxisOptions(title) {
+            const options = getChartOptions(title);
+            options.scales.y1 = {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false
+                },
+                title: {
+                    display: true,
+                    text: 'Comments'
+                }
+            };
+            return options;
+        }
+
+        function getBubbleOptions(xTitle, yTitle) {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const data = context.raw;
+                                return `${context.dataset.label}: (${data.x}, ${data.y}), Size: ${data.r}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: xTitle
+                        },
+                        beginAtZero: true
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: yTitle
+                        },
+                        beginAtZero: true
+                    }
+                }
+            };
+        }
     </script>
 </body>
 

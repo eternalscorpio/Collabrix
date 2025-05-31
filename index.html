@@ -3,218 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Task Manager</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Role Selection Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base Light Theme */
-        :root {
-            --primary-bg: #f8f9fa;
-            --secondary-bg: #ffffff;
-            --text-color: #2d3436;
-            --accent-1: #4a90e2;
-            --accent-2: #50e3c2;
-            --transition: all 0.3s ease;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui;
-            margin: 0;
-            padding: 0;
-            background: var(--primary-bg);
-            color: var(--text-color);
-            transition: var(--transition);
-        }
-
-        /* Role-Specific Themes */
-        body[data-role="manager"] {
-            --primary-bg: #f0f5ff;
-            --secondary-bg: #ffffff;
-            --text-color: #1a237e;
-            --accent-1: #3d5afe;
-            --accent-2: #536dfe;
-            --status-color: #64dd17;
-        }
-
-        body[data-role="teamlead"] {
-            --primary-bg: #f3f8f2;
-            --secondary-bg: #ffffff;
-            --text-color: #1b5e20;
-            --accent-1: #43a047;
-            --accent-2: #66bb6a;
-            --status-color: #7c4dff;
-        }
-
-        body[data-role="employee"] {
-            --primary-bg: #fff5f7;
-            --secondary-bg: #ffffff;
-            --text-color: #c2185b;
-            --accent-1: #e91e63;
-            --accent-2: #f06292;
-            --status-color: #ff9100;
-        }
-
-        /* Common Components */
-        .container {
-            display: grid;
-            grid-template-columns: 250px 1fr 300px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            gap: 20px;
-        }
-
-        .sidebar, .right-panel {
-            background: var(--secondary-bg);
-            padding: 20px;
-            border-right: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .task-card {
-            background: var(--secondary-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-            border-left: 4px solid var(--accent-1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            overflow-x: hidden;
         }
 
-        .btn:hover {
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-circle i {
+            font-size: 50px;
+            color: white;
+        }
+
+        header {
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
             opacity: 0.9;
         }
 
-        /* Status Indicators */
-        .status-indicator {
-            width: 12px;
-            height: 12px;
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 320px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-20px) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            background: var(--status-color);
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 60px;
+            color: white;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
         }
 
-        /* Charts */
-        .metric-chart {
-            background: var(--secondary-bg);
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
+        .card:hover .card-icon {
+            transform: rotate(15deg) scale(1.1);
         }
 
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .container {
-                grid-template-columns: 1fr;
+        .card-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-desc {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:nth-child(2) .card-icon {
+            background: linear-gradient(135deg, #4ca1af, #c4e0e5);
+        }
+
+        .card:nth-child(3) .card-icon {
+            background: linear-gradient(135deg, #834d9b, #d04ed6);
+        }
+
+        .animate-card-1 {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .animate-card-2 {
+            animation: slideInUp 0.8s ease-out 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .animate-card-3 {
+            animation: slideInRight 0.8s ease-out 0.4s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .footer {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .sidebar, .right-panel {
-                display: none;
+            .card {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
-<body data-role="manager">
-    <div class="theme-switcher">
-        <button class="btn" onclick="switchRole('manager')">Manager</button>
-        <button class="btn" onclick="switchRole('teamlead')">Team Lead</button>
-        <button class="btn" onclick="switchRole('employee')">Employee</button>
-    </div>
-
+<body>
     <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2 style="color: var(--accent-1);">Navigation</h2>
-            <ul id="nav-menu" style="list-style: none; padding: 0;">
-                <!-- Dynamic Navigation -->
-            </ul>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="metric-chart">
-                <h3>Project Progress</h3>
-                <div class="chart-placeholder" style="height: 200px; background: var(--primary-bg);"></div>
-            </div>
-
-            <div class="task-board" id="task-board">
-                <!-- Dynamic Task Cards -->
+        <div class="logo">
+            <div class="logo-circle">
+                <i class="fas fa-users"></i>
             </div>
         </div>
-
-        <!-- Right Panel -->
-        <div class="right-panel">
-            <div class="notifications">
-                <h3 style="color: var(--accent-1);">Notifications</h3>
-                <div class="notification-card" style="background: var(--primary-bg); padding: 10px; margin: 10px 0; border-radius: 8px;">
-                    New task assigned - Project Review
+        
+        <header>
+            <h1>Team Portal</h1>
+            <p class="subtitle">Select your role to access specialized tools and resources tailored to your position</p>
+        </header>
+        
+        <div class="cards-container">
+            <div class="card animate-card-1" onclick="redirect('/employee/index.html')">
+                <div class="card-icon">
+                    <i class="fas fa-user-tie"></i>
                 </div>
+                <h2 class="card-title">Employee</h2>
+                <p class="card-desc">Access your task dashboard, submit timesheets, view schedules, and collaborate with your team members.</p>
+                <button class="btn">Access Portal</button>
             </div>
+            
+            <div class="card animate-card-2" onclick="redirect('/teamlead/teamlead.html')">
+                <div class="card-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <h2 class="card-title">Team Lead</h2>
+                <p class="card-desc">Manage team projects, assign tasks, track progress, and generate performance reports.</p>
+                <button class="btn">Access Portal</button>
+            </div>
+            
+            <div class="card animate-card-3" onclick="redirect('/manager/index.html')">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2 class="card-title">Manager</h2>
+                <p class="card-desc">Oversee department performance, analyze reports, allocate resources, and make strategic decisions.</p>
+                <button class="btn">Access Portal</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2025 Teambrix. All rights reserved.</p>
         </div>
     </div>
 
     <script>
-        // Role Configuration
-        const roles = {
-            manager: {
-                navItems: ['Dashboard', 'Analytics', 'Teams', 'Reports'],
-                tasks: ['Budget Planning', 'Resource Allocation', 'Client Meeting']
-            },
-            teamlead: {
-                navItems: ['My Team', 'Tasks', 'Performance', 'Documents'],
-                tasks: ['Sprint Planning', 'Code Review', 'Deployment']
-            },
-            employee: {
-                navItems: ['My Tasks', 'Time Log', 'Messages'],
-                tasks: ['Feature Implementation', 'Testing', 'Documentation']
-            }
-        };
-
-        function switchRole(role) {
-            document.body.setAttribute('data-role', role);
-            updateNavigation(role);
-            updateDashboard(role);
+        function redirect(page) {
+            // Create a ripple effect
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(255,255,255,0.5)';
+            overlay.style.zIndex = '1000';
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.5s ease';
+            document.body.appendChild(overlay);
+            
+            // Fade in overlay
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
+            
+            // Redirect after animation
+            setTimeout(() => {
+                window.location.href = page;
+            }, 500);
         }
-
-        function updateNavigation(role) {
-            const navMenu = document.getElementById('nav-menu');
-            navMenu.innerHTML = roles[role].navItems
-                .map(item => `
-                    <li style="margin: 10px 0;">
-                        <button class="btn" style="width: 100%; text-align: left;">
-                            ${item}
-                        </button>
-                    </li>
-                `).join('');
-        }
-
-        function updateDashboard(role) {
-            const taskBoard = document.getElementById('task-board');
-            taskBoard.innerHTML = roles[role].tasks
-                .map(task => `
-                    <div class="task-card">
-                        <h4 style="margin: 0 0 10px 0;">${task}</h4>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span class="status-indicator"></span>
-                            <select style="padding: 5px; border-radius: 4px; border: 1px solid var(--accent-1);">
-                                <option>In Progress</option>
-                                <option>Completed</option>
-                                <option>On Hold</option>
-                            </select>
-                        </div>
-                    </div>
-                `).join('');
-        }
-
-        // Initial setup
-        updateNavigation('manager');
-        updateDashboard('manager');
+        
+        // Add hover effects dynamically
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
     </script>
 </body>
 </html>
